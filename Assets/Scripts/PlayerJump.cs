@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerJump : MonoBehaviour
 {
     public float jumpForce;
+    public float overlapCircleRadius;
     public Transform GroundCheck;
     public LayerMask WhatIsGround;
 
@@ -23,9 +24,10 @@ public class PlayerJump : MonoBehaviour
 
     void Update()
     {
-        isGrounded = Physics2D.Linecast(transform.position, GroundCheck.position, WhatIsGround);
+        isGrounded = Physics2D.OverlapCircle(GroundCheck.position, overlapCircleRadius, WhatIsGround);
+        // isGrounded = Physics2D.Linecast(transform.position, GroundCheck.position, WhatIsGround);
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             isJumping = true;
         }
@@ -35,9 +37,15 @@ public class PlayerJump : MonoBehaviour
     {
         if (isJumping)
         {
-            myRigidbody2D.AddForce(Vector2.up * jumpForce);
+            myRigidbody2D.AddForce((Vector2.up * jumpForce), ForceMode2D.Impulse);
             isJumping = false;
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(GroundCheck.position, overlapCircleRadius);
     }
 
 }
