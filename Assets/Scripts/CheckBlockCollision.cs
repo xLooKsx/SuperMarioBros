@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class CheckBlockCollision : MonoBehaviour
 {
+
+    public bool GivePoints = false;
+    public int AmountOfPoints = 0;
+
+    public GameManager gameManager;
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            GameObject parentGameObject = this.transform.parent.gameObject;
+            if (GivePoints)
+            {
+                gameManager.AddPoints(AmountOfPoints);
+            }
+            
+            GameObject parentGameObject = this.transform.parent.gameObject;            
             GameObject.Destroy(parentGameObject);
         }
     }
